@@ -37,8 +37,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/practice-deploy-be:latest .
+          docker build -t ghcr.io/${{ github.repository }}:latest .
 
       - name: Push Docker Image
         run: |
-          docker push ghcr.io/${{ github.repository }}/practice-deploy-be:latest
+          docker push ghcr.io/${{ github.repository }}:latest
