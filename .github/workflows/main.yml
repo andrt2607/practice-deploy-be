@@ -76,7 +76,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:$TAG
+            docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
             docker stop practice-deploy-be || true
             docker rm practice-deploy-be || true
-            docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$TAG
+            docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$RELEASE_VERSION
