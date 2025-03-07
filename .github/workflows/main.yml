@@ -63,3 +63,20 @@ jobs:
           echo "Pushing Docker image with tag: $RELEASE_VERSION"
           docker push ghcr.io/${{ github.repository }}:$RELEASE_VERSION
           docker push ghcr.io/${{ github.repository }}:latest
+  deploy:
+    name: Deploy to Remote Server
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
+            docker pull ghcr.io/${{ github.repository }}:$TAG
+            docker stop practice-deploy-be || true
+            docker rm practice-deploy-be || true
+            docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$TAG
