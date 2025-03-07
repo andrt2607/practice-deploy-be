@@ -1,15 +1,12 @@
 name: CI/CD Express.js
 
 on:
-  push:
-    branches:
-      - main
-  release: 
+  release:
     types: [published]
-  workflow_dispatch: 
+  workflow_dispatch:
     inputs:
       tag:
-        description: "Tag for the release"
+        description: 'Tag version for the release'
         required: true
 
 jobs:
