@@ -75,7 +75,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            RELEASE_VERSION="${RELEASE_VERSION#?}"
+            RELEASE_VERSION="${{ github.event.inputs.tag || github.event.release.tag_name }}"
+            echo "Release Version (before processing): $RELEASE_VERSION"
+            RELEASE_VERSION="${RELEASE_VERSION#v}"
             echo "Building pull image with tag: $RELEASE_VERSION"
             if [ -z "$RELEASE_VERSION" ]; then
               echo "Error: RELEASE_VERSION is empty!"
