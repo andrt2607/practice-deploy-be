@@ -75,9 +75,16 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            RELEASE_VERSION="${RELEASE_VERSION#?}"
+            echo "Building pull image with tag: $RELEASE_VERSION"
+            if [ -z "$RELEASE_VERSION" ]; then
+              echo "Error: RELEASE_VERSION is empty!"
+              exit 1
+            fi
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
             docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
             docker stop practice-deploy-be || true
             docker rm practice-deploy-be || true
+            echo "Building Container Docker with tag: $RELEASE_VERSION"
             docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$RELEASE_VERSION
       
