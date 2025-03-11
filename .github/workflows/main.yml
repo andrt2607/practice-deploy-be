@@ -25,6 +25,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Install Prisma CLI
+        run: npm install @prisma/client
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
       - name: Run Prettier Check
         run: npx prettier --check --write .
 
@@ -89,4 +95,4 @@ jobs:
             docker rm practice-deploy-be || true
             echo "Building Container Docker with tag: $RELEASE_VERSION"
             docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$RELEASE_VERSION
-      
+

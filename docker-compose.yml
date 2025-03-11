@@ -10,4 +10,17 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=production
+      - POSTGRES_HOST=db
+    env_file:
+      - .env
     command: ['node', 'server.js']
+
+  db:
+    image: postgres:13
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
