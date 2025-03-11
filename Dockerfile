@@ -14,7 +14,7 @@ RUN npm install
 RUN apt-get update && apt-get install -y postgresql-client
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 # Copy application files
 COPY . .
