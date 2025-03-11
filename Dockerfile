@@ -13,6 +13,9 @@ RUN npm install
 # Install PostgreSQL client
 RUN apt-get update && apt-get install -y postgresql-client
 
+# Generate Prisma Client
+RUN npx prisma generate
+
 # Copy application files
 COPY . .
 
@@ -20,4 +23,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
