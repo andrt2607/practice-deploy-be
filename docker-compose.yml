@@ -19,6 +19,8 @@ services:
       interval: 5s
       timeout: 2s
       retries: 20
+    volumes:
+      - pg-data:/var/lib/postgresql/data
 
   backend:
     image: ghcr.io/andrt2607/practice-deploy-be:latest
@@ -37,7 +39,15 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - prisma-data:/app/prisma
 
 networks:
   prisma-network:
     name: prisma-network
+
+volumes:
+  pg-data:
+    name: pg-data
+  prisma-data:
+    name: prisma-data

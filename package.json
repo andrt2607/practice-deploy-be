@@ -6,7 +6,7 @@
     "start:dev": "nodemon server.js",
     "start": "node server.js",
     "lint": "eslint . --ext .js",
-    "db:deploy": "npx prisma migrate deploy && npx prisma generate",
+    "db:deploy": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev"
   },
   "keywords": [],
