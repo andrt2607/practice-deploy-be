@@ -83,19 +83,13 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            RELEASE_VERSION="${{ github.event.inputs.tag || github.event.release.tag_name }}"
-            echo "Release Version (before processing): $RELEASE_VERSION"
-            RELEASE_VERSION="${RELEASE_VERSION#v}"
-            echo "Building pull image with tag: $RELEASE_VERSION"
-            if [ -z "$RELEASE_VERSION" ]; then
-              echo "Error: RELEASE_VERSION is empty!"
-              exit 1
-            fi
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
-            docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
+            docker pull ghcr.io/${{ github.repository }}:latest
             cd project/practice-deploy-be
             git pull origin main
             docker compose down || true
+            echo "Removing old images latest..."
+            docker image rm -f ghcr.io/${{ github.repository }}:latest || true
             echo "Setting environment variables..."
             [[ -z "${{ secrets.POSTGRES_DB }}" ]] && echo "POSTGRES_DB is empty!"
             [[ -z "${{ secrets.POSTGRES_USER }}" ]] && echo "POSTGRES_USER is empty!"
