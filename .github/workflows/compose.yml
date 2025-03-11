@@ -102,13 +102,9 @@ jobs:
             fi
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
             docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
-            docker stop practice-deploy-be || true
-            docker rm practice-deploy-be || true
-            # Jalankan container baru dengan environment langsung dari secret
-            docker run -d --name practice-deploy-be \
-              -p 3000:3000 \
-              -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-              -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
-              -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
-              ghcr.io/${{ github.repository }}:$RELEASE_VERSION
+            docker-compose down
+            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            docker-compose up -d
