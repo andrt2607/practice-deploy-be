@@ -21,9 +21,8 @@ services:
       retries: 20
 
   backend:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/andrt2607/practice-deploy-be:${RELEASE_VERSION_ENV}
+    container_name: backend-service
     ports:
       - '3000:3000'
     tty: true

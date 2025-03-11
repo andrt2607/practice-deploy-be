@@ -108,4 +108,5 @@ jobs:
             export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export RELEASE_VERSION_ENV=RELEASE_VERSION
             docker compose up -d
