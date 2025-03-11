@@ -74,6 +74,17 @@ jobs:
           docker push ghcr.io/${{ github.repository }}:$RELEASE_VERSION
           docker push ghcr.io/${{ github.repository }}:latest
 
+  deploy:
+    name: Deploy via SSH
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Pull Latest Changes
+        run: git pull origin main
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -94,5 +105,9 @@ jobs:
             docker stop practice-deploy-be || true
             docker rm practice-deploy-be || true
             echo "Building Container Docker with tag: $RELEASE_VERSION"
-            docker run -d --name practice-deploy-be -p 3000:3000 ghcr.io/${{ github.repository }}:$RELEASE_VERSION
-
+            docker run -d --name practice-deploy-be -p 3000:3000 \
+              -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+              -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+              -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+              -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+              ghcr.io/${{ github.repository }}:$RELEASE_VERSION
