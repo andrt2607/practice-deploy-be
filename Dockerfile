@@ -11,10 +11,13 @@ COPY package*.json ./
 RUN npm install
 
 # Install PostgreSQL client
-RUN apt-get update && apt-get install -y postgresql-client
+# RUN apt-get update && apt-get install -y postgresql-client
+
+#Copy prisma schema file
+# COPY prisma/schema.prisma ./prisma/
 
 # Generate Prisma Client
-RUN npx prisma generate --schema=./prisma/schema.prisma
+# RUN npx prisma generate --schema=./prisma/schema.prisma
 
 # Copy application files
 COPY . .
@@ -23,4 +26,5 @@ COPY . .
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+# CMD ["npm", "start"]
+CMD [ "sh", "-c", "npm run db:deploy && npm run start" ]

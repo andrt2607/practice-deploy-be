@@ -1,9 +1,13 @@
-name: CI/CD Express.js
+name: CI/CD Express with Docker Compose
 
 on:
-  push:
-    branches:
-      - dev-on-push
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag version for the release'
+        required: true
 
 jobs:
   lint:
@@ -88,7 +92,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env.prod
             RELEASE_VERSION="${{ github.event.inputs.tag || github.event.release.tag_name }}"
             echo "Release Version (before processing): $RELEASE_VERSION"
             RELEASE_VERSION="${RELEASE_VERSION#v}"
@@ -101,10 +104,11 @@ jobs:
             docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
             docker stop practice-deploy-be || true
             docker rm practice-deploy-be || true
-            echo "Building Container Docker with tag: $RELEASE_VERSION"
-            docker run -d --name practice-deploy-be -p 3000:3000 \
+            # Jalankan container baru dengan environment langsung dari secret
+            docker run -d --name practice-deploy-be \
+              -p 3000:3000 \
+              -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
               -e POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
               -e POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
-              -e POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
-              -e POSTGRES_HOST=${{ secrets.POSTGRES_HOST }} \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
               ghcr.io/${{ github.repository }}:$RELEASE_VERSION
