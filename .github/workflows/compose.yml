@@ -76,9 +76,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Pull Latest Changes
-        run: git pull origin main
-
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -120,4 +117,5 @@ jobs:
             POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
             DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            npx prisma migrate deploy && npx prisma generate
             docker compose up -d
