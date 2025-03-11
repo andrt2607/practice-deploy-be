@@ -99,10 +99,17 @@ jobs:
             cd project/practice-deploy-be
             git pull origin main
             docker compose down || true
+            echo "Setting environment variables..."
             export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             export DATABASE_URL=${{ secrets.DATABASE_URL }}
-            export RELEASE_VERSION_ENV=RELEASE_VERSION
+            export RELEASE_VERSION_ENV=$RELEASE_VERSION
+            # Debugging: Print values
+            echo "POSTGRES_DB: $POSTGRES_DB"
+            echo "POSTGRES_USER: $POSTGRES_USER"
+            echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+            echo "DATABASE_URL: $DATABASE_URL"
+            echo "RELEASE_VERSION_ENV: $RELEASE_VERSION_ENV"
             docker volume rm $(docker volume ls -q | grep postgres)
             docker compose up -d
