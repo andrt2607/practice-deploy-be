@@ -100,6 +100,10 @@ jobs:
             git pull origin main
             docker compose down || true
             echo "Setting environment variables..."
+            [[ -z "${{ secrets.POSTGRES_DB }}" ]] && echo "POSTGRES_DB is empty!"
+            [[ -z "${{ secrets.POSTGRES_USER }}" ]] && echo "POSTGRES_USER is empty!"
+            [[ -z "${{ secrets.POSTGRES_PASSWORD }}" ]] && echo "POSTGRES_PASSWORD is empty!"
+            [[ -z "${{ secrets.DATABASE_URL }}" ]] && echo "DATABASE_URL is empty!"
             export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
             export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -112,4 +116,8 @@ jobs:
             echo "DATABASE_URL: $DATABASE_URL"
             echo "RELEASE_VERSION_ENV: $RELEASE_VERSION_ENV"
             docker volume rm $(docker volume ls -q | grep postgres)
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+            DATABASE_URL=${{ secrets.DATABASE_URL }} \
             docker compose up -d
