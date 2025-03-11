@@ -25,18 +25,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Install Prisma CLI
-        run: npm install @prisma/client
-
-      - name: Run Prisma Migrations
-        run: npx prisma migrate deploy
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
-
-      - name: Debug Database URL
-        run: echo $DATABASE_URL
-
       - name: Run Prettier Check
         run: npx prettier --check --write .
 
