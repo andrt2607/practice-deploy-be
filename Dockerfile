@@ -4,7 +4,7 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-COPY prisma /app/prisma
+COPY prisma/migrations /app/prisma/migrations
 
 RUN chmod -R 777 /app/prisma/migrations
 
