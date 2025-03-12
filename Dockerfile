@@ -10,21 +10,6 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Install Prisma CLI globally (opsional jika tidak ada di dependencies)
-RUN npm install -g prisma
-
-# Install PostgreSQL client
-# RUN apt-get update && apt-get install -y postgresql-client
-
-# Generate Prisma Client
-# RUN npx prisma generate --schema=./prisma/schema.prisma
-
-#Copy prisma schema file
-# COPY prisma/schema.prisma ./prisma/
-# copy also file migrations inside prisma folder
-COPY prisma/migrations ./prisma/migrations/
-COPY prisma ./prisma/
-
 # Copy application files
 COPY . .
 
@@ -32,5 +17,4 @@ COPY . .
 EXPOSE 3000
 
 # Start the application
-# CMD ["npm", "start"]
 CMD [ "sh", "-c", "npm run db:deploy && npm run start" ]
