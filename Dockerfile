@@ -4,9 +4,8 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-COPY prisma/migrations /app/prisma/migrations
-
-RUN chmod -R 777 /app/prisma/migrations
+RUN mkdir -p /app/prisma/migrations && chmod -R 777 /app/prisma/migrations
+COPY prisma /app/prisma
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
