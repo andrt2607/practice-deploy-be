@@ -63,7 +63,7 @@ jobs:
           fi
           RELEASE_VERSION="${RELEASE_VERSION#?}"
           echo "Building Docker image with tag: $RELEASE_VERSION"
-          docker build . -t ghcr.io/${{ github.repository }}:$RELEASE_VERSION -t ghcr.io/${{ github.repository }}:latest
+          docker build --no-cache . -t ghcr.io/${{ github.repository }}:$RELEASE_VERSION -t ghcr.io/${{ github.repository }}:latest
           echo "Pushing Docker image with tag: $RELEASE_VERSION"
           docker push ghcr.io/${{ github.repository }}:$RELEASE_VERSION
           docker push ghcr.io/${{ github.repository }}:latest
