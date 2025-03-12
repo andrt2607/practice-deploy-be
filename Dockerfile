@@ -21,6 +21,8 @@ RUN npm install -g prisma
 
 #Copy prisma schema file
 # COPY prisma/schema.prisma ./prisma/
+# copy also file migrations inside prisma folder
+COPY prisma/migrations ./prisma/migrations/
 COPY prisma ./prisma/
 
 # Copy application files
