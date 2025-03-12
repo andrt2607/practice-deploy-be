@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 COPY prisma ./prisma/
+# Copy migrations folder inside prisma
+COPY prisma/migrations ./prisma/migrations/
 
 # Install dependencies
 RUN npm install
