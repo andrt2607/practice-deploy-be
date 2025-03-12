@@ -40,6 +40,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -65,7 +67,7 @@ jobs:
           fi
           RELEASE_VERSION="${RELEASE_VERSION#?}"
           echo "Building Docker image with tag: $RELEASE_VERSION"
-          docker build --pull --no-cache . -t ghcr.io/${{ github.repository }}:$RELEASE_VERSION -t ghcr.io/${{ github.repository }}:latest
+          docker build --pull --no-cache . -t ghcr.io/${{ github.repository }}:latest -t ghcr.io/${{ github.repository }}:$RELEASE_VERSION 
           echo "Pushing Docker image with tag: $RELEASE_VERSION"
           docker push ghcr.io/${{ github.repository }}:$RELEASE_VERSION
           docker push ghcr.io/${{ github.repository }}:latest
@@ -77,6 +79,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v0.1.10
