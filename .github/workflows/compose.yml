@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -87,7 +89,6 @@ jobs:
             echo "Removing old images latest..."
             echo "Cleaning up old Docker images..."
             docker system prune -af || true
-            docker pull ghcr.io/${{ github.repository }}:latest
             cd project/practice-deploy-be
             git pull origin main
             docker compose down --remove-orphans || true
