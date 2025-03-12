@@ -4,11 +4,9 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
-RUN mkdir -p /app/prisma/migrations && chmod -R 777 /app/prisma/migrations
-COPY prisma /app/prisma
-
 # Copy package.json and package-lock.json
 COPY package*.json ./
+COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm install

@@ -23,7 +23,9 @@ services:
       - pg-data:/var/lib/postgresql/data
 
   backend:
-    image: ghcr.io/andrt2607/practice-deploy-be:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: backend-service
     pull_policy: always
     ports:
