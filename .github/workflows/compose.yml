@@ -102,17 +102,18 @@ jobs:
             [[ -z "${{ secrets.POSTGRES_USER }}" ]] && echo "POSTGRES_USER is empty!"
             [[ -z "${{ secrets.POSTGRES_PASSWORD }}" ]] && echo "POSTGRES_PASSWORD is empty!"
             [[ -z "${{ secrets.DATABASE_URL }}" ]] && echo "DATABASE_URL is empty!"
-            export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            export DATABASE_URL=${{ secrets.DATABASE_URL }}
+            export POSTGRES_DB="${{ secrets.POSTGRES_DB }}"
+            export POSTGRES_USER="${{ secrets.POSTGRES_USER }}"
+            export POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
+            export DATABASE_URL="${{ secrets.DATABASE_URL }}"
             export RELEASE_VERSION_ENV=$RELEASE_VERSION
             # Debugging: Print values
-            echo "POSTGRES_DB: $POSTGRES_DB"
-            echo "POSTGRES_USER: $POSTGRES_USER"
-            echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
-            echo "DATABASE_URL: $DATABASE_URL"
-            echo "RELEASE_VERSION_ENV: $RELEASE_VERSION_ENV"
+            echo "POSTGRES_DB: $POSTGRES_DB" >> ~/.bashrc
+            echo "POSTGRES_USER: $POSTGRES_USER" >> ~/.bashrc
+            echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD" >> ~/.bashrc
+            echo "DATABASE_URL: $DATABASE_URL" >> ~/.bashrc
+            echo "RELEASE_VERSION_ENV: $RELEASE_VERSION_ENV" >> ~/.bashrc
+            source ~/.bashrc
             POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
             POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
