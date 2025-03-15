@@ -7,13 +7,9 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy application files
-COPY . .
-
-RUN npm ci
-
 COPY . .
 
 CMD ["sh", "-c", "npm run db:deploy && npm run start"]
