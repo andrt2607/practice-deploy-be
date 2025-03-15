@@ -46,9 +46,6 @@ jobs:
       - name: Check Latest Commit
         run: git log -1 --oneline
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GIT_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
       - name: Set output release tag
         id: release
         if: github.event_name == 'release'
@@ -63,22 +60,18 @@ jobs:
           echo "RELEASE_VERSION=${{ github.event.inputs.tag }}" >> $GITHUB_ENV
           echo "RELEASE_VERSION=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
 
-      - name: Remove Old Images
-        run: |
-          docker rmi ghcr.io/${{ github.repository }}:latest || true
-          docker rmi ghcr.io/${{ github.repository }}:$RELEASE_VERSION || true
-
       - name: Build Docker Image
         run: |
+          docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
           if [ -z "$RELEASE_VERSION" ]; then
             echo "RELEASE_VERSION=main" >> $GITHUB_ENV
           fi
           RELEASE_VERSION="${RELEASE_VERSION#?}"
           echo "Building Docker image with tag: $RELEASE_VERSION"
-          docker build --pull --no-cache . -t ghcr.io/${{ github.repository }}:latest -t ghcr.io/${{ github.repository }}:$RELEASE_VERSION 
+          docker build --pull --no-cache . -t ghcr.io/${{ github.repository }}/test:latest -t ghcr.io/${{ github.repository }}/test:$RELEASE_VERSION 
           echo "Pushing Docker image with tag: $RELEASE_VERSION"
-          docker push ghcr.io/${{ github.repository }}:$RELEASE_VERSION
-          docker push ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}/test:$RELEASE_VERSION
+          docker push ghcr.io/${{ github.repository }}/test:latest
 
   deploy:
     name: Deploy via SSH
@@ -100,8 +93,7 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GIT_TOKEN }}
             echo "Removing old images latest..."
             echo "Cleaning up old Docker images..."
-            docker pull ghcr.io/${{ github.repository }}:$RELEASE_VERSION
-            docker pull ghcr.io/${{ github.repository }}:latest
+            docker pull ghcr.io/${{ github.repository }}/test:latest
             cd project/practice-deploy-be
             git pull origin main
             docker compose down --remove-orphans || true

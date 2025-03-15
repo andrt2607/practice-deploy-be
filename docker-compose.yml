@@ -23,10 +23,8 @@ services:
       - pg-data:/var/lib/postgresql/data
 
   backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: backend-service
+    image: ghcr.io/andrt2607/practice-deploy-be/test:latest
+    container_name: svc-practice-be
     pull_policy: always
     ports:
       - '3000:3000'
