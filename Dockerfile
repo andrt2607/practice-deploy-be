@@ -1,23 +1,19 @@
 # Dockerfile
-FROM node:18
+FROM node:lts-alpine3.17
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-COPY prisma ./prisma/
-# Copy migrations folder inside prisma
-COPY prisma/migrations ./prisma/migrations/
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
 # Copy application files
 COPY . .
 
-# Expose port
-EXPOSE 3000
+RUN npm ci
 
-# Start the application
-CMD [ "sh", "-c", "npm run db:deploy && npm run start" ]
+COPY . .
+
+CMD ["sh", "-c", "npm run db:deploy && npm run start"]
