@@ -5,7 +5,7 @@
   "scripts": {
     "start:dev": "nodemon server.js",
     "start": "node server.js",
-    "lint": "eslint . --ext .js",
+    "lint": "eslint . --ext .js --ignore-pattern 'generated/prisma_client/**'",
     "db:deploy": "npx prisma migrate deploy && npx prisma generate",
     "migrate:dev": "npx prisma migrate dev"
   },
