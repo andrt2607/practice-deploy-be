@@ -130,15 +130,16 @@ jobs:
             "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
             "embeds": [{
               "title": "Deployment Status",
-              "description": "${{ job.status == 'success' && '✅' || '❌' }} 🚀  Deployment **${{ job.status }}** for branch `${{ github.ref }}`",
+              "description": "${{ job.status == 'success' && '✅' || '❌' }} 🚀  Deployment **${{ job.status }}** for       branch `${{ github.ref }}`",
               "color": 3066993,
               "fields": [
-              { "name": "Repository", "value": "[${{ github.repository }}](https://github.com/${{ github.repository }})",              "inline": true },
-              { "name": "Commit", "value": "[${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{             github.sha }})", "inline": true },
-              { "name": "Workflow", "value": "[Read on GitHub Actions](https://github.com/${{ github.repository }}/actions/             runs/${{ github.run_id }})", "inline": false }
-            ]
+                { "name": "Repository", "value": "[${{ github.repository }}](https://github.com/${{ github.     repository }})", "inline": true },
+                { "name": "Commit", "value": "[${{ github.sha }}](https://github.com/${{ github.repository }}/commit/$      {{ github.sha }})", "inline": true },
+                { "name": "Workflow", "value": "[Read on GitHub Actions](https://github.com/${{ github.repository }}/     actions/runs/${{ github.run_id }})", "inline": false }
+              ],
               "footer": { "text": "GitHub Actions | '"${{ github.actor }}"'" }
             }]
           }'
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
