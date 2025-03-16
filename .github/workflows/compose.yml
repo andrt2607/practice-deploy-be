@@ -145,27 +145,35 @@ jobs:
         run: |
           if [ "${{ job.status }}" == "success" ]; then
             COLOR=3066993 # green
+            STATUS_EMOJI="✅"
           else
             COLOR=15158332 # red
+            STATUS_EMOJI="❌"
           fi
-          curl -X POST "$DISCORD_WEBHOOK_URL" \
-          -H "Content-Type: application/json" \
-          -d '{
+
+          JSON_PAYLOAD=$(cat <<EOF
+          {
             "username": "GitHub Actions",
             "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
             "embeds": [{
               "title": "Deployment Status",
-              "description": "${{ job.status == 'success' && '✅' || '❌' }} 🚀  Deployment **${{ job.status }}** for       branch `${{ github.ref }}`",
-              "color": '"'"'$COLOR'"'"',
+              "description": "$STATUS_EMOJI 🚀 Deployment **${{ job.status }}** for branch \`${{ github.ref }}\`",
+              "color": $COLOR,
               "fields": [
                 { "name": "Repository", "value": "[${{ github.repository }}](https://github.com/${{ github.repository }})", "inline": true },
                 { "name": "Commit", "value": "[${{ github.sha }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})", "inline": true },
-                { "name": "Workflow", "value": "[Read on GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})", "inline": false },
+                { "name": "Workflow", "value": "[Read on GitHub Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})",   "inline":     false },
                 { "name": "⏱ Time to Deploy", "value": "${{ steps.deploy-duration.outputs.formatted_time }}", "inline": true }
               ],
-              "footer": { "text": "GitHub Actions | '"${{ github.actor }}"'" }
+              "footer": { "text": "GitHub Actions | ${{ github.actor }}" }
             }]
-          }'
+          }
+          EOF
+          )
+
+          curl -X POST "$DISCORD_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD"
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
